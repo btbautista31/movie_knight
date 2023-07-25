@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Knight</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.6/dayjs.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
+
 <body>
     <h1>Movie Knight</h1>
-    <input type="text" id="searchInput" placeholder="Enter a movie title">
-    <button id="searchButton">Search</button>
-    <div id="searchResults"></div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Enter a movie name">
+        <button id="searchButton">Search</button>
+    </div>
+    <div id="resultsContainer"></div>
     <script src="./assets/js/script.js"></script>
     <div class="card">
         <div class="card-image">
@@ -31,25 +38,5 @@
             </div>
           </div>
 </body>
+
 </html>
-
-
-<!-- Patrick's Third API -->
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IMDB API Search</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>IMDB API Search</h1>
-  <div class="search-container">
-    <input type="text" id="searchInput" placeholder="Enter a movie name">
-    <button onclick="searchMovies()">Search</button>
-  </div>
-  <div id="resultsContainer"></div>
-  <script src="script.js"></script>
-</body>
-</html> -->

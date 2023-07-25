@@ -1,174 +1,149 @@
-// API key for accessing The Movie Database (TMDB) API
-var apiKey = 'a16cc6bba8e2db52eca5d51f65ad6960';
-// Base URL for searching movies on TMDB API
-var searchApiUrl = 'https://api.themoviedb.org/3/search/movie';
-// Base URL for fetching movie details on TMDB API
-var movieDetailsUrl = 'https://api.themoviedb.org/3/movie';
+// Find the search button element by its ID
+var searchButton = document.getElementById('searchButton');
+// Find the input field element by its ID
+var searchInput = document.getElementById('searchInput');
 
-
-// Function to search for movies based on the user input
-function searchMovies() {
-    // Get the search query from the input field
-    var query = document.getElementById('searchInput').value;
-
-    // If the query is empty or contains only spaces, show an alert and return
-    if (query.trim() === '') {
-        alert('Please enter a movie title'); // ** REPLACE ALERT W/ MODAL **
-        return;
+// Add a click and keypress event listener to the search button
+searchButton.addEventListener('click', searchMovies);
+searchInput.addEventListener('keypress', function (event) {
+    if (event.key === 'Enter') {
+        searchMovies();
     }
-
-    // Fetch movie data from TMDB API based on the search query
-    fetch(`${searchApiUrl}?api_key=${apiKey}&query=${query}`)
-        .then(response => response.json())
-        // Call the displayResults function with the search results
-        .then(data => displayResults(data.results)) 
-        .catch(error => console.error('Error fetching data:', error));
-}
-
-
-// Function to get the movie details based on the movie ID
-async function getMovieDetails(movieId) {
-    // Fetch movie details from TMDB API based on the movie ID
-    return fetch(`${movieDetailsUrl}/${movieId}?api_key=${apiKey}`)
-        .then(response => response.json())
-        // Extract the plot overview from the fetched data
-        .then(data => data.overview) 
-        .catch(error => {
-            console.error('Error fetching movie details:', error);
-            return 'Synopsis not available'; 
-        });
-}
-
-// Function to get the IMDb ID based on the movie ID
-function getImdbId(movieId) {
-    // Fetch IMDb ID from TMDB API based on the movie ID
-    return fetch(`${movieDetailsUrl}/${movieId}/external_ids?api_key=${apiKey}`)
-        .then(response => response.json())
-        // Extract the IMDb ID from the fetched data
-        .then(data => data.imdb_id) 
-        .catch(error => {
-            console.error('Error fetching IMDb ID:', error);
-            return 'N/A'; 
-        });
-}
-
-// Function to display the search results on the webpage
-async function displayResults(results) {
-    // Get the element where search results will be displayed
-    var searchResults = document.getElementById('searchResults');
-
-    // Clear the previous search results
-    searchResults.innerHTML = '';
-
-    // If no results were found, show a message indicating that
-    if (results.length === 0) {
-        searchResults.innerHTML = '<p>No results found</p>';
-    } else {
-        // Loop through each movie in the search results
-        for (var i = 0; i < results.length; i++) {
-            var movie = results[i];
-            // Format the release date using Day.js library
-            var releaseDate = dayjs(movie.release_date).format('MM-DD-YYYY');
-
-            // Create a new element to represent the movie card
-            var movieCard = document.createElement('div');
-
-            // Populate the movie card with movie information
-            movieCard.innerHTML = `<h2>${movie.title}</h2>
-                                   <p>Release Date: ${releaseDate}</p>
-                                   <img src="https://image.tmdb.org/t/p/w185/${movie.poster_path}" 
-                                   alt="${movie.title} poster">`;
-
-
-                                   
-            // Get the plot overview for the movie and add it to the movieCard
-            var plotOverview = await getMovieDetails(movie.id);              
-            var plotElement = document.createElement('p');
-            plotElement.textContent = plotOverview;            
-            movieCard.appendChild(plotElement);
-
-            // Get the IMDb ID for the movie and add it to the movieCard as plain text
-            var imdbId = await getImdbId(movie.id);
-            var imdbIdNum = document.createElement('p');
-            imdbIdNum.textContent = `IMDb ID: ${imdbId}`;
-            movieCard.appendChild(imdbIdNum);
-
-            // Append the movie card to the search results container
-            searchResults.appendChild(movieCard);
-        }
-
-    }
-
-}
-
-// Add a click event listener to the search button
-document.getElementById('searchButton').addEventListener('click', searchMovies);
-
-const settings = {
-	async: true,
-	crossDomain: true,
-	url: 'https://imdb-search2.p.rapidapi.com/oppenheimer',
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': '249f566bbdmsh5a8a690f2cf015ap1db355jsn44e4a97a11da',
-		'X-RapidAPI-Host': 'imdb-search2.p.rapidapi.com'
-	}
-};
-
-$.ajax(settings).done(function (response) {
-	console.log(response);
 });
 
+// API key and URL for accessing The Movie Database (TMDB) API
+var tmdbApiKey = 'a16cc6bba8e2db52eca5d51f65ad6960';
+var tmdbBaseUrl = 'https://api.themoviedb.org/3/search/movie';
 
+// API key and URL for accessing IMDb API
+var imdbApiKey = '9b559a8572msh413c7f476033e46p13acf3jsnd8b1f4ec1384';
+var imdbBaseUrl = 'https://imdb8.p.rapidapi.com/auto-complete?q=';
 
-// Patrick's Third API 
-// https://rapidapi.com/apidojo/api/imdb8
+// Function to handle the search for movies using both TMDB and IMDb APIs
+function searchMovies() {
+    // Varible used to retrieve user search input (movie title)
+    var searchTerm = document.getElementById('searchInput').value;
 
-// var apiKey = '9b559a8572msh413c7f476033e46p13acf3jsnd8b1f4ec1384';
-// var baseUrl = 'https://imdb8.p.rapidapi.com/auto-complete?q=';
+    // Search movies using TMDB API
+    searchTmdbMovies(searchTerm)
+        .then(tmdbResults => {
+            // Search movies using IMDb API
+            searchImdbMovies(searchTerm)
+                .then(imdbResults => {
+                    // Combine TMDB and IMDb results to create movie cards
+                    var combinedResults = combineResults(tmdbResults, imdbResults);
+                    // Printing results to console
+                    console.log(combinedResults);
+                    // Display the combined movie cards
+                    displayResults(combinedResults);
+                })
+                .catch(error => console.error('IMDb API Error:', error));
+        })
+        .catch(error => console.error('TMDB API Error:', error));
+}
 
-// function searchMovies() {
-//     var searchTerm = document.getElementById('searchInput').value;
-//     var url = baseUrl + encodeURIComponent(searchTerm);
-//     var options = {
-//         method: 'GET',
-//         headers: {
-//             'X-RapidAPI-Key': apiKey,
-//             'X-RapidAPI-Host': 'imdb8.p.rapidapi.com'
-//         }
-//     };
+// Function to search for movies on TMDB API
+async function searchTmdbMovies(query) {
+    var url = `${tmdbBaseUrl}?api_key=${tmdbApiKey}&query=${encodeURIComponent(query)}`;
+    try {
+        var response = await fetch(url);
+        var data = await response.json();
+        return data.results;
+    } catch (error) {
+        console.error('Error fetching TMDB data:', error);
+        return [];
+    }
+}
 
-//     fetch(url, options)
-//         .then(response => response.json())
-//         .then(result => displayResults(result.d))
-//         .catch(error => console.error(error));
-// }
+// Function to search for movies on IMDb API
+async function searchImdbMovies(query) {
+    var url = `${imdbBaseUrl}${encodeURIComponent(query)}`;
+    var options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': imdbApiKey,
+            'X-RapidAPI-Host': 'imdb8.p.rapidapi.com'
+        }
+    };
 
-// function displayResults(results) {
-//     console.log(results);
-//     var resultsContainer = document.getElementById('resultsContainer');
-//     resultsContainer.innerHTML = '';
+    try {
+        var response = await fetch(url, options);
+        var data = await response.json();
+        return data.d;
+    } catch (error) {
+        console.error('Error fetching IMDb data:', error);
+        return [];
+    }
+}
 
-//     if (results.length === 0) {
-//         resultsContainer.innerHTML = '<p>No results found.</p>';
-//     } else {
-//         for (var result of results) {
-//             if (result.l && result.s && result.i && result.i.imageUrl) {
-//                 var titleElement = document.createElement('h2');
-//                 titleElement.textContent = result.l;
-//                 resultsContainer.appendChild(titleElement);
+// Function to combine results from TMDB and IMDb based on movie titles
+function combineResults(tmdbResults, imdbResults) {
+    var combinedResults = [];
 
-//                 var posterElement = document.createElement('img');
-//                 posterElement.src = result.i.imageUrl;
-//                 posterElement.alt = result.l + ' Poster';
-//                 posterElement.style.width = '150px'; 
-//                 posterElement.style.height = '225px';
-//                 resultsContainer.appendChild(posterElement);
+    for (var i = 0; i < tmdbResults.length; i++) {
+        var tmdbMovie = tmdbResults[i];
+        // Find matching IMDb movie based on title
+        var imdbMovie = imdbResults.find(imdbMovie => imdbMovie.l === tmdbMovie.title);
 
-//                 var descriptionElement = document.createElement('p');
-//                 descriptionElement.textContent = result.s;
-//                 resultsContainer.appendChild(descriptionElement);
-//             }
-//         }
-//     }
-// }
+        // Combine data from both APIs
+        var combinedMovie = {
+            title: tmdbMovie.title,
+            releaseDate: tmdbMovie.release_date,
+            imageUrl: tmdbMovie.poster_path,
+            tmdbDescription: tmdbMovie.overview,
+            imdbDescription: imdbMovie ? imdbMovie.s : null,
+            imdbId: imdbMovie && imdbMovie.id ? imdbMovie.id : null // Retrieve the IMDb ID from the IMDb API response
+        };
+
+        combinedResults.push(combinedMovie);
+    }
+
+    return combinedResults;
+}
+
+// Function to display the combined movie data as movie cards
+function displayResults(results) {
+    var resultsContainer = document.getElementById('resultsContainer');
+    resultsContainer.innerHTML = '';
+
+    if (results.length === 0) {
+        resultsContainer.innerHTML = '<p>No results found.</p>';
+    } else {
+        for (var movie of results) {
+            // Check if all the necessary properties are present to avoid displaying incomplete data
+            if (movie.title && movie.releaseDate && movie.imageUrl) {
+                // Set 'N/A' for actors if imdbDescription is not available
+                var imdbDescription = movie.imdbDescription || 'N/A';
+                // Set 'N/A' for plot overview if tmdbDescription is not available
+                var tmdbDescription = movie.tmdbDescription || 'N/A';
+                // Display combined movie data in the movie card
+                var movieCard = createMovieCard(movie.title, movie.releaseDate, movie.imageUrl, tmdbDescription, imdbDescription, movie.imdbId);
+                resultsContainer.appendChild(movieCard);
+            }
+        }
+    }
+}
+
+// Function to create a movie card with provided movie information
+function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDescription, imdbId) {
+    var movieCard = document.createElement('div');
+    var releaseDateString = releaseDate ? dayjs(releaseDate).format('MM-DD-YYYY') : 'N/A';
+    // Creating the movie card that will be displayed for each search result
+    movieCard.innerHTML = `<br>
+                           <h2><strong>${title}</strong></h2>
+                           <p>Release Date: ${releaseDateString}</p>
+                           <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
+                           <br>
+                           <p><strong>Actors:</strong> ${imdbDescription}</p>
+                           <p><strong>Plot:</strong> ${tmdbDescription}</p>`;
+    
+    // Conditionally add the IMDb link if imdbId is available
+    if (imdbId) {
+        var imdbLink = `https://www.imdb.com/title/${imdbId}`;
+        movieCard.innerHTML += `<p><strong>IMDb Link: </strong><em><a href="${imdbLink}" target="_blank">${imdbLink}</a></em></p>`;
+    }
+
+    movieCard.innerHTML += '<br>';
+
+    return movieCard;
+}
