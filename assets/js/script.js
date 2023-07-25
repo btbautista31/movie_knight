@@ -5,6 +5,7 @@ var searchApiUrl = 'https://api.themoviedb.org/3/search/movie';
 // Base URL for fetching movie details on TMDB API
 var movieDetailsUrl = 'https://api.themoviedb.org/3/movie';
 
+
 // Function to search for movies based on the user input
 function searchMovies() {
     // Get the search query from the input field
@@ -23,6 +24,7 @@ function searchMovies() {
         .then(data => displayResults(data.results)) 
         .catch(error => console.error('Error fetching data:', error));
 }
+
 
 // Function to get the movie details based on the movie ID
 async function getMovieDetails(movieId) {
@@ -54,12 +56,9 @@ function getImdbId(movieId) {
 async function displayResults(results) {
     // Get the element where search results will be displayed
     var searchResults = document.getElementById('searchResults');
-        
-
 
     // Clear the previous search results
     searchResults.innerHTML = '';
-
 
     // If no results were found, show a message indicating that
     if (results.length === 0) {
@@ -80,6 +79,8 @@ async function displayResults(results) {
                                    <img src="https://image.tmdb.org/t/p/w185/${movie.poster_path}" 
                                    alt="${movie.title} poster">`;
 
+
+                                   
             // Get the plot overview for the movie and add it to the movieCard
             var plotOverview = await getMovieDetails(movie.id);              
             var plotElement = document.createElement('p');
