@@ -54,9 +54,12 @@ function getImdbId(movieId) {
 async function displayResults(results) {
     // Get the element where search results will be displayed
     var searchResults = document.getElementById('searchResults');
+        
+
 
     // Clear the previous search results
     searchResults.innerHTML = '';
+
 
     // If no results were found, show a message indicating that
     if (results.length === 0) {
@@ -78,9 +81,9 @@ async function displayResults(results) {
                                    alt="${movie.title} poster">`;
 
             // Get the plot overview for the movie and add it to the movieCard
-            var plotOverview = await getMovieDetails(movie.id);
+            var plotOverview = await getMovieDetails(movie.id);              
             var plotElement = document.createElement('p');
-            plotElement.textContent = plotOverview;
+            plotElement.textContent = plotOverview;            
             movieCard.appendChild(plotElement);
 
             // Get the IMDb ID for the movie and add it to the movieCard as plain text
@@ -92,7 +95,9 @@ async function displayResults(results) {
             // Append the movie card to the search results container
             searchResults.appendChild(movieCard);
         }
+
     }
+
 }
 
 // Add a click event listener to the search button
