@@ -104,7 +104,6 @@ async function displayResults(results) {
 // Add a click event listener to the search button
 document.getElementById('searchButton').addEventListener('click', searchMovies);
 
-// fetch request from rapidapi for imdb data and console log the response
 const settings = {
 	async: true,
 	crossDomain: true,
@@ -120,3 +119,56 @@ $.ajax(settings).done(function (response) {
 	console.log(response);
 });
 
+
+
+// Patrick's Third API 
+// https://rapidapi.com/apidojo/api/imdb8
+
+// var apiKey = '9b559a8572msh413c7f476033e46p13acf3jsnd8b1f4ec1384';
+// var baseUrl = 'https://imdb8.p.rapidapi.com/auto-complete?q=';
+
+// function searchMovies() {
+//     var searchTerm = document.getElementById('searchInput').value;
+//     var url = baseUrl + encodeURIComponent(searchTerm);
+//     var options = {
+//         method: 'GET',
+//         headers: {
+//             'X-RapidAPI-Key': apiKey,
+//             'X-RapidAPI-Host': 'imdb8.p.rapidapi.com'
+//         }
+//     };
+
+//     fetch(url, options)
+//         .then(response => response.json())
+//         .then(result => displayResults(result.d))
+//         .catch(error => console.error(error));
+// }
+
+// function displayResults(results) {
+//     console.log(results);
+//     var resultsContainer = document.getElementById('resultsContainer');
+//     resultsContainer.innerHTML = '';
+
+//     if (results.length === 0) {
+//         resultsContainer.innerHTML = '<p>No results found.</p>';
+//     } else {
+//         for (var result of results) {
+//             if (result.l && result.s && result.i && result.i.imageUrl) {
+//                 var titleElement = document.createElement('h2');
+//                 titleElement.textContent = result.l;
+//                 resultsContainer.appendChild(titleElement);
+
+//                 var posterElement = document.createElement('img');
+//                 posterElement.src = result.i.imageUrl;
+//                 posterElement.alt = result.l + ' Poster';
+//                 posterElement.style.width = '150px'; 
+//                 posterElement.style.height = '225px';
+//                 resultsContainer.appendChild(posterElement);
+
+//                 var descriptionElement = document.createElement('p');
+//                 descriptionElement.textContent = result.s;
+//                 resultsContainer.appendChild(descriptionElement);
+//             }
+//         }
+//     }
+// }
