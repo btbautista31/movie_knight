@@ -197,9 +197,9 @@ function addToWatchlist(movie) {
         // Save the updated watchlist data back to localStorage
         localStorage.setItem('watchlist', JSON.stringify(watchlist));
         // Inform the user that the movie has been added to the watchlist
-        alert('Movie added to watchlist!');
+        Swal.fire('Movie added to watchlist!');
     } else {
         // Inform the user that the movie is already in the watchlist
-        alert('This movie is already in your watchlist!');
+        Swal.fire('This movie is already in your watchlist!');
     }
 }
