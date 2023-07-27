@@ -13,38 +13,41 @@ searchInput.addEventListener('keypress', function (event) {
 
 // API key and URL for accessing The Movie Database (TMDB) API
 var tmdbApiKey = 'a16cc6bba8e2db52eca5d51f65ad6960';
-var tmdbBaseUrl = 'https://api.themoviedb.org/3/search/movie';
+var tmdbSearchApiUrl = 'https://api.themoviedb.org/3/search/movie';
 
 // API key and URL for accessing IMDb API
 var imdbApiKey = '9b559a8572msh413c7f476033e46p13acf3jsnd8b1f4ec1384';
 var imdbBaseUrl = 'https://imdb8.p.rapidapi.com/auto-complete?q=';
 
 // Function to handle the search for movies using both TMDB and IMDb APIs
-function searchMovies() {
+async function searchMovies() {
     // Varible used to retrieve user search input (movie title)
     var searchTerm = document.getElementById('searchInput').value;
 
     // Search movies using TMDB API
-    searchTmdbMovies(searchTerm)
-        .then(tmdbResults => {
-            // Search movies using IMDb API
-            searchImdbMovies(searchTerm)
-                .then(imdbResults => {
-                    // Combine TMDB and IMDb results to create movie cards
-                    var combinedResults = combineResults(tmdbResults, imdbResults);
-                    // Printing results to console
-                    console.log(combinedResults);
-                    // Display the combined movie cards
-                    displayResults(combinedResults);
-                })
-                .catch(error => console.error('IMDb API Error:', error));
-        })
-        .catch(error => console.error('TMDB API Error:', error));
+    try {
+        var tmdbResults = await searchTmdbMovies(searchTerm);
+
+        // Search movies using IMDb API
+        try {
+            var imdbResults = await searchImdbMovies(searchTerm);
+
+            // Combine TMDB and IMDb results to create movie cards
+            var combinedResults = combineResults(tmdbResults, imdbResults);
+
+            // Display the combined movie cards
+            displayResults(combinedResults);
+        } catch (error) {
+            console.error('IMDb API Error:', error);
+        }
+    } catch (error) {
+        console.error('TMDB API Error:', error);
+    }
 }
 
 // Function to search for movies on TMDB API
 async function searchTmdbMovies(query) {
-    var url = `${tmdbBaseUrl}?api_key=${tmdbApiKey}&query=${encodeURIComponent(query)}`;
+    var url = `${tmdbSearchApiUrl}?api_key=${tmdbApiKey}&query=${encodeURIComponent(query)}`;
     try {
         var response = await fetch(url);
         var data = await response.json();
@@ -101,6 +104,52 @@ function combineResults(tmdbResults, imdbResults) {
     return combinedResults;
 }
 
+// Function to create a movie card with provided movie information
+function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDescription, imdbId) {
+    var movieCard = document.createElement('div');
+    movieCard.classList.add('movie-card');
+    movieCard.style.backgroundColor = '#444';
+    var releaseDateString = releaseDate ? dayjs(releaseDate).format('MM-DD-YYYY') : 'N/A';
+
+    // Declare the IMDb link variable with an empty string
+    var imdbLink = '';
+
+    // Conditionally set the IMDb link if imdbId is available
+    if (imdbId) {
+        imdbLink = `https://www.imdb.com/title/${imdbId}`;
+    }
+
+    // Creating the movie card that will be displayed for each search result
+    movieCard.innerHTML = `<h2><strong>${title}</strong></h2>
+                           <p>Release Date: ${releaseDateString}</p>
+                           <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
+                           <br>
+                           <p><strong>Actors:</strong> ${imdbDescription}</p>
+                           <p>${tmdbDescription}</p>`;
+
+    // Conditionally add the IMDb link if imdbId is available
+    if (imdbLink) {
+        movieCard.innerHTML += `<p><strong>IMDb Link: </strong><em><a href="${imdbLink}" target="_blank">${imdbLink}</a></em></p>`;
+    }
+
+    // Add the "Add to Watchlist" button with the corresponding CSS class
+    movieCard.innerHTML += '<button class="button is-info addToWatchlistButton">Add to Watchlist</button><br>';
+
+    // Add event listener to the "Add to Watchlist" button
+    movieCard.querySelector('.addToWatchlistButton').addEventListener('click', function () {
+        addToWatchlist({
+            title: title,
+            releaseDate: releaseDate,
+            imageUrl: imageUrl,
+            tmdbDescription: tmdbDescription,
+            imdbDescription: imdbDescription,
+            imdbId: imdbId
+        });
+    });
+
+    return movieCard;
+}
+
 // Function to display the combined movie data as movie cards
 function displayResults(results) {
     var resultsContainer = document.getElementById('resultsContainer');
@@ -116,77 +165,41 @@ function displayResults(results) {
                 var imdbDescription = movie.imdbDescription || 'N/A';
                 // Set 'N/A' for plot overview if tmdbDescription is not available
                 var tmdbDescription = movie.tmdbDescription || 'N/A';
-                // Display combined movie data in the movie card
-                var movieCard = createMovieCard(movie.title, movie.releaseDate, movie.imageUrl, tmdbDescription, imdbDescription, movie.imdbId);
+
+                // Create the movie card using the createMovieCard function
+                var movieCard = createMovieCard(
+                    movie.title,
+                    movie.releaseDate,
+                    movie.imageUrl,
+                    tmdbDescription,
+                    imdbDescription,
+                    movie.imdbId
+                );
+
+                // Append the movie card to the results container
                 resultsContainer.appendChild(movieCard);
             }
         }
     }
 }
 
-// Function to create a movie card with provided movie information
-function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDescription, imdbId) {
-    var movieCard = document.createElement('div');
-    var releaseDateString = releaseDate ? dayjs(releaseDate).format('MM-DD-YYYY') : 'N/A';
-    // Creating the movie card that will be displayed for each search result
-    movieCard.innerHTML =
-    // `<div class="card">
-    //     <div class="card-image">
-    //     <figure>
-    //         <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
-    //     </figure>
-    //      </div>
+// Function to handle adding movies to the watchlist
+function addToWatchlist(movie) {
+    // Get the current watchlist data from localStorage or an empty array if it's not set yet
+    var watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
-    //     <div class="card-content">
-    //         <div class="content">
-    //             <h2><strong>${title}</strong></h2>
-    //             <p class="subtitle is-6">Release Date: ${releaseDateString}</p>
-    //             <p><strong>Actors:</strong> ${imdbDescription}</p>
-    //             <p><strong>Plot:</strong> ${tmdbDescription}</p>
-    //         </div>
-    //     </div>
-                                
-    // </div>`;
+    // Check if the movie is already in the watchlist
+    var movieExists = watchlist.some(m => m.title === movie.title);
 
-`
-<div class="columns">
-<div class="column is-three-quarters">
-<div class="card">
-
-    <div class="card-image">
-    <figure class="image is-3by4">
-    <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
-  </figure>
-    </div>      
-
-
-    <div class="card-content">
-      <div class="media">
-        <div class="media-content">
-  
-          <p class="title is-4">${title}</p>
-          <p class="subtitle is-6">Release Date: ${releaseDateString}</p>
-        </div>
-      </div>
-  
-      <div class="content">
-      <p><strong>Actors:</strong> ${imdbDescription}</p>
-                 <p><strong>Plot:</strong> ${tmdbDescription}</p>
-      </div>
-    </div>
-  </div>
-  </div>
-  </div>`;
-
-
-    
-    // Conditionally add the IMDb link if imdbId is available
-    if (imdbId) {
-        var imdbLink = `https://www.imdb.com/title/${imdbId}`;
-        movieCard.innerHTML += `<p><strong>IMDb Link: </strong><em><a href="${imdbLink}" target="_blank">${imdbLink}</a></em></p>`;
+    if (!movieExists) {
+        // Add the movie to the watchlist array
+        watchlist.push(movie);
+        // Save the updated watchlist data back to localStorage
+        localStorage.setItem('watchlist', JSON.stringify(watchlist));
+        // Inform the user that the movie has been added to the watchlist
+        Swal.fire('Movie added to watchlist!');
+    } else {
+        // Inform the user that the movie is already in the watchlist
+        Swal.fire('This movie is already in your watchlist!');
     }
-
-    movieCard.innerHTML += '<br>';
-
-    return movieCard;
 }
