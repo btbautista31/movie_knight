@@ -24,7 +24,7 @@ body, html {
 }
 
 .logo {
-    width: 200px;
+    width: 400px;
 }
 
 .enter-link {
@@ -41,7 +41,7 @@ body, html {
 }
 
 .header {
-    background-color: #222;
+    background-color: #23201d;
     color: #fff;
     text-align: center;
     padding: 20px;
@@ -84,7 +84,6 @@ body, html {
     gap: 20px;
 }
 
-
 /* Movie Card Styles */
 .movie-card {
     background-color: #5c5c5c;
@@ -116,28 +115,32 @@ body, html {
 
 .movie-card a {
     color: #007BFF;
-    text-decoration: none; 
+    text-decoration: none;
 }
 
 .movie-card a:hover {
-    text-decoration: none; 
+    text-decoration: none;
 }
 
-.addToWatchlistButton {
-    background-color: orange;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
+.fa-regular.fa-heart {
     cursor: pointer;
-    padding: 8px 16px;
-    transition: background-color 0.3s ease;
+    transition: transform 0.2s ease;
 }
 
-.addToWatchlistButton:hover {
-    background-color: rgb(222, 144, 0);
+.fa-regular.fa-heart:hover {
+    transform: scale(1.1);
 }
 
-/* Media query for small screens (max width 820px) */
+.movie-card img.imdb-link {
+    width: 10px; 
+    height: auto; 
+}
+
+.movie-description {
+    margin-bottom: 15px;
+}
+
+/* Media query for a smaller screensize (max width 820px) */
 @media screen and (max-width: 820px) {
     .results-section {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
