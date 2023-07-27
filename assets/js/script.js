@@ -129,13 +129,56 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
     var movieCard = document.createElement('div');
     var releaseDateString = releaseDate ? dayjs(releaseDate).format('MM-DD-YYYY') : 'N/A';
     // Creating the movie card that will be displayed for each search result
-    movieCard.innerHTML = `<br>
-                           <h2><strong>${title}</strong></h2>
-                           <p>Release Date: ${releaseDateString}</p>
-                           <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
-                           <br>
-                           <p><strong>Actors:</strong> ${imdbDescription}</p>
-                           <p><strong>Plot:</strong> ${tmdbDescription}</p>`;
+    movieCard.innerHTML =
+    // `<div class="card">
+    //     <div class="card-image">
+    //     <figure>
+    //         <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
+    //     </figure>
+    //      </div>
+
+    //     <div class="card-content">
+    //         <div class="content">
+    //             <h2><strong>${title}</strong></h2>
+    //             <p class="subtitle is-6">Release Date: ${releaseDateString}</p>
+    //             <p><strong>Actors:</strong> ${imdbDescription}</p>
+    //             <p><strong>Plot:</strong> ${tmdbDescription}</p>
+    //         </div>
+    //     </div>
+                                
+    // </div>`;
+
+`
+<div class="columns">
+<div class="column is-three-quarters">
+<div class="card">
+
+    <div class="card-image">
+    <figure class="image is-3by4">
+    <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
+  </figure>
+    </div>      
+
+
+    <div class="card-content">
+      <div class="media">
+        <div class="media-content">
+  
+          <p class="title is-4">${title}</p>
+          <p class="subtitle is-6">Release Date: ${releaseDateString}</p>
+        </div>
+      </div>
+  
+      <div class="content">
+      <p><strong>Actors:</strong> ${imdbDescription}</p>
+                 <p><strong>Plot:</strong> ${tmdbDescription}</p>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>`;
+
+
     
     // Conditionally add the IMDb link if imdbId is available
     if (imdbId) {
