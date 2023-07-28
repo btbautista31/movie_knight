@@ -175,6 +175,10 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
         heartIcon.classList.remove('fa-regular');
         heartIcon.classList.add('fa-solid', 'fa-heart', 'fa-2xl');
         heartIcon.style.color = '#f494cc';
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add cursor: pointer style to the heartIcon
+            heartIcon.style.cursor = 'pointer';
+          });
     }
 
     // Add the Font Awesome icon to the movie card
