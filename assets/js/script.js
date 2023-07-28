@@ -124,19 +124,6 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
 
     // Creating the movie card that will be displayed for each search result
     movieCard.innerHTML = `<h2><strong>${title}</strong></h2>
-
-                           <p>Release Date: ${releaseDateString}</p>
-                           <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
-                           <br>
-                           <p><strong>Actors:</strong> ${imdbDescription}</p>
-                           <p>${tmdbDescription}</p>`;
-
-                           
-
-    // Conditionally add the IMDb link if imdbId is available
-    if (imdbLink) {
-        movieCard.innerHTML += `<p><strong>IMDb Link: </strong><em><a href="${imdbLink}" target="_blank">${imdbLink}</a></em></p>`;
-
                             <p>Release Date: ${releaseDateString}</p>
                             <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
                             <p><strong>Actors:</strong> ${imdbDescription}</p>
@@ -192,7 +179,6 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
             // Add cursor: pointer style to the heartIcon
             heartIcon.style.cursor = 'pointer';
           });
-
     }
 
     // Add the Font Awesome icon to the movie card
@@ -294,25 +280,3 @@ function addToWatchlist(movie, heartIcon) {
         heartIcon.style.color = '#ffa200';
     }
 }
-
-
-// Navbar-Hamburger 
-$( document ).ready(function() {
-
-    $( ".cross" ).hide();
-    $( ".menu" ).hide();
-    $( ".hamburger" ).click(function() {
-    $( ".menu" ).slideToggle( "slow", function() {
-    $( ".hamburger" ).hide();
-    $( ".cross" ).show();
-    });
-    });
-    
-    $( ".cross" ).click(function() {
-    $( ".menu" ).slideToggle( "slow", function() {
-    $( ".cross" ).hide();
-    $( ".hamburger" ).show();
-    });
-    });
-    
-    });
