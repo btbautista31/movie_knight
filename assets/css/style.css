@@ -2,17 +2,14 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
 }
 
 body {
     font-family: Arial, sans-serif;
     color: orange;
-    background-color: #000;
     margin: 0;
-}
-
-body, html {
-    height: 100%;
+    background-color: #000;
 }
 
 .landing-page {
@@ -144,10 +141,11 @@ body, html {
 }
 
 /* Media query for a smaller screensize (max width 820px) */
-@media screen and (max-width: 820px) {
+/* @media screen and (max-width: 820px) {
     .results-section {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
+
 }
 
 
@@ -192,3 +190,14 @@ body, html {
   .menu ul li a:hover {  color: #666; text-decoration:none;}
   .menu a{text-decoration:none; color:#666;}
   .menu a:hover{text-decoration:none; color:#666;}
+
+} 
+
+@media (max-width: 767px) {
+    /* <== You can change this break point as per your  needs */
+    .reverse-columns {
+      flex-direction: column-reverse;
+      display: flex;
+    }
+  }
+
