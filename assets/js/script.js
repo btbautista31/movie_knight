@@ -104,11 +104,14 @@ function combineResults(tmdbResults, imdbResults) {
     return combinedResults;
 }
 
-// Function to create a movie card with provided movie information
 function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDescription, imdbId) {
     var movieCard = document.createElement('div');
     movieCard.classList.add('movie-card');
     movieCard.style.backgroundColor = '#444';
+    movieCard.style.display = 'flex';
+    movieCard.style.flexDirection = 'column';
+    movieCard.style.justifyContent = 'space-around';
+
     var releaseDateString = releaseDate ? dayjs(releaseDate).format('MM-DD-YYYY') : 'N/A';
 
     // Declare the IMDb link variable with an empty string
@@ -121,6 +124,7 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
 
     // Creating the movie card that will be displayed for each search result
     movieCard.innerHTML = `<h2><strong>${title}</strong></h2>
+
                            <p>Release Date: ${releaseDateString}</p>
                            <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
                            <br>
@@ -132,13 +136,86 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
     // Conditionally add the IMDb link if imdbId is available
     if (imdbLink) {
         movieCard.innerHTML += `<p><strong>IMDb Link: </strong><em><a href="${imdbLink}" target="_blank">${imdbLink}</a></em></p>`;
+
+                            <p>Release Date: ${releaseDateString}</p>
+                            <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
+                            <p><strong>Actors:</strong> ${imdbDescription}</p>
+                            <p class="movie-description">${tmdbDescription}</p>`;
+
+    // Creating the IMDb logo image element
+    var imdbLogoImg = document.createElement('img');
+    imdbLogoImg.src = './assets/images/imdb.png';
+    imdbLogoImg.alt = 'IMDb';
+    imdbLogoImg.style.width = '80px';
+    imdbLogoImg.style.height = 'auto';
+    imdbLogoImg.style.borderRadius = '8px';
+    imdbLogoImg.style.transform = 'scale(1.0)';
+
+    // Creating a mouseover effect that makes the imdbLogoImg slightly larger when hovered over
+    imdbLogoImg.addEventListener('mouseover', function () {
+        imdbLogoImg.style.transition = 'transform 0.2s ease';
+        imdbLogoImg.style.transform = 'scale(1.1)';
+    });
+
+    imdbLogoImg.addEventListener('mouseout', function () {
+        imdbLogoImg.style.transition = 'transform 0.2s ease';
+        imdbLogoImg.style.transform = 'scale(1.0)';
+    });
+
+    // Creating the IMDb link element
+    var imdbLinkElement = document.createElement('a');
+    imdbLinkElement.href = imdbLink;
+    imdbLinkElement.target = '_blank';
+    imdbLinkElement.appendChild(imdbLogoImg);
+
+    // Append the IMDb link to the movie card
+    var imdbLinkContainer = document.createElement('p');
+    imdbLinkContainer.classList.add('imdb-link');
+    imdbLinkContainer.appendChild(imdbLinkElement);
+    movieCard.appendChild(imdbLinkContainer);
+
+    // Creating the Font Awesome icon element
+    var heartIcon = document.createElement('i');
+    heartIcon.classList.add('fa-regular', 'fa-heart', 'fa-2xl');
+    heartIcon.style.color = '#ffa200';
+    heartIcon.style.paddingBottom = '10px';
+
+    // Check if the movie is in the watchlist
+    var watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+    var movieIndex = watchlist.findIndex(m => m.title === title);
+    if (movieIndex !== -1) {
+        // Movie is in the watchlist, so set the icon to the pink version
+        heartIcon.classList.remove('fa-regular');
+        heartIcon.classList.add('fa-solid', 'fa-heart', 'fa-2xl');
+        heartIcon.style.color = '#f494cc';
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add cursor: pointer style to the heartIcon
+            heartIcon.style.cursor = 'pointer';
+          });
+
     }
 
-    // Add the "Add to Watchlist" button with the corresponding CSS class
-    movieCard.innerHTML += '<button class="button is-info addToWatchlistButton">Add to Watchlist</button><br>';
+    // Add the Font Awesome icon to the movie card
+    movieCard.appendChild(heartIcon);
 
-    // Add event listener to the "Add to Watchlist" button
-    movieCard.querySelector('.addToWatchlistButton').addEventListener('click', function () {
+    // Function to toggle the icon style when clicked
+    function toggleIcon() {
+        if (heartIcon.classList.contains('fa-regular')) {
+            // Icon is in regular state, switch to solid state and add to watchlist
+            heartIcon.classList.remove('fa-regular');
+            heartIcon.classList.add('fa-solid', 'fa-heart', 'fa-2xl');
+            heartIcon.style.color = '#f494cc';
+        } else {
+            // Icon is in solid state, switch to regular state and remove from watchlist
+            heartIcon.classList.remove('fa-solid', 'fa-heart', 'fa-2xl');
+            heartIcon.classList.add('fa-regular');
+            heartIcon.style.color = '#ffa200';
+        }
+    }
+
+    // Add event listener to the Font Awesome icon
+    heartIcon.addEventListener('click', function () {
+        toggleIcon();
         addToWatchlist({
             title: title,
             releaseDate: releaseDate,
@@ -146,10 +223,10 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
             tmdbDescription: tmdbDescription,
             imdbDescription: imdbDescription,
             imdbId: imdbId
-        });
+        }, heartIcon);
     });
 
-    return movieCard;
+    return { movieCard, heartIcon };
 }
 
 // Function to display the combined movie data as movie cards
@@ -169,7 +246,7 @@ function displayResults(results) {
                 var tmdbDescription = movie.tmdbDescription || 'N/A';
 
                 // Create the movie card using the createMovieCard function
-                var movieCard = createMovieCard(
+                var { movieCard } = createMovieCard(
                     movie.title,
                     movie.releaseDate,
                     movie.imageUrl,
@@ -186,23 +263,35 @@ function displayResults(results) {
 }
 
 // Function to handle adding movies to the watchlist
-function addToWatchlist(movie) {
+function addToWatchlist(movie, heartIcon) {
     // Get the current watchlist data from localStorage or an empty array if it's not set yet
     var watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-
     // Check if the movie is already in the watchlist
-    var movieExists = watchlist.some(m => m.title === movie.title);
+    var movieIndex = watchlist.findIndex(m => m.title === movie.title);
 
-    if (!movieExists) {
-        // Add the movie to the watchlist array
+    if (movieIndex === -1) {
+        // If movie isn't in watchlist, push it
         watchlist.push(movie);
-        // Save the updated watchlist data back to localStorage
+        // Save the updated watchlist to localStorage
         localStorage.setItem('watchlist', JSON.stringify(watchlist));
-        // Inform the user that the movie has been added to the watchlist
+        // Using a modal to notify user that movie was saved
         Swal.fire('Movie added to watchlist!');
+
+        // Toggle the icon to the solid state and add it to the watchlist
+        heartIcon.classList.remove('fa-regular', 'fa-heart', 'fa-2xl');
+        heartIcon.classList.add('fa-solid', 'fa-heart', 'fa-2xl');
+        heartIcon.style.color = '#f494cc';
     } else {
-        // Inform the user that the movie is already in the watchlist
-        Swal.fire('This movie is already in your watchlist!');
+        // Movie is already in the watchlist, so remove it
+        watchlist.splice(movieIndex, 1);
+        // Save the updated watchlist to localStorage
+        localStorage.setItem('watchlist', JSON.stringify(watchlist));
+        // Using a modal to notify user that movie was removed
+        Swal.fire('Movie removed from watchlist!');
+        // Toggle the heartIcon back to its normal state
+        heartIcon.classList.remove('fa-solid', 'fa-heart', 'fa-2xl');
+        heartIcon.classList.add('fa-regular', 'fa-heart', 'fa-2xl');
+        heartIcon.style.color = '#ffa200';
     }
 }
 
