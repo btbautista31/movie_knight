@@ -127,6 +127,8 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
                            <p><strong>Actors:</strong> ${imdbDescription}</p>
                            <p>${tmdbDescription}</p>`;
 
+                           
+
     // Conditionally add the IMDb link if imdbId is available
     if (imdbLink) {
         movieCard.innerHTML += `<p><strong>IMDb Link: </strong><em><a href="${imdbLink}" target="_blank">${imdbLink}</a></em></p>`;
@@ -203,3 +205,25 @@ function addToWatchlist(movie) {
         Swal.fire('This movie is already in your watchlist!');
     }
 }
+
+
+// Navbar-Hamburger 
+$( document ).ready(function() {
+
+    $( ".cross" ).hide();
+    $( ".menu" ).hide();
+    $( ".hamburger" ).click(function() {
+    $( ".menu" ).slideToggle( "slow", function() {
+    $( ".hamburger" ).hide();
+    $( ".cross" ).show();
+    });
+    });
+    
+    $( ".cross" ).click(function() {
+    $( ".menu" ).slideToggle( "slow", function() {
+    $( ".cross" ).hide();
+    $( ".hamburger" ).show();
+    });
+    });
+    
+    });
