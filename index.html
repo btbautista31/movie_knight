@@ -5,15 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Knight</title>
-    <link rel="stylesheet" href="./assets/css/style.css" />
+    
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.6/dayjs.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/e311760a74.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=DM+Sans:wght@700&family=Eczar:wght@600&family=Inter:wght@500&family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 
 <body>
-
     <header class="header">
         <img src="./assets/images/wide-logo.png" alt="Movie Knight Header" class="logo">  
     </header>
@@ -22,9 +24,28 @@
         <section class="search-container">
             <input type="text" id="searchInput" class="input" placeholder="Enter a movie name">
             <button id="searchButton" class="button is-primary">Search</button>
+
+            <i class="fa-solid fa-bars hamburger" style="color: #ff6b01;"></i>
+            <button class="cross"><i class="fa-solid fa-times" style="color: #ff6b01;"></i></button>
+         
+            <div class="menu">
+              <ul>
+                <a href="homepage.html"><li>Home Page</li></a>
+                <a href="watchlist.html"><li>Watchlist</li></a>
+                <a href="https://www.grubhub.com"><li>Grubhub</li></a>
+                <a href="https://www.foodnetwork.com/recipes/articles/50-flavored-popcorn-recipes"><li>Popcorn Recipes</li></a>
+              </ul>
+            </div> 
         </section>
 
-        <section id="resultsContainer" class="results-section"></section>
+        <div class="columns reverse-columns is-flex">
+            <section id="resultsContainer" class="column results-section"></section>
+            <div class="column is-one-fifth watchlist">
+                <h2 class="watchListHeader">Watchlist</h2>
+                <ul class="savedMovies" id="watchlistContainer"></ul>
+            </div>
+        </div>
+
     </main>
 
     <script src="./assets/js/script.js"></script>
