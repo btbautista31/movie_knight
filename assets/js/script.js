@@ -16,7 +16,7 @@ var tmdbApiKey = 'a16cc6bba8e2db52eca5d51f65ad6960';
 var tmdbSearchApiUrl = 'https://api.themoviedb.org/3/search/movie';
 
 // API key and URL for accessing IMDb API
-var imdbApiKey = '9b559a8572msh413c7f476033e46p13acf3jsnd8b1f4ec1384';
+var imdbApiKey = '10c24cb31dmsh671547ce894229ap1a6b7fjsn7afc7733cfb3';
 var imdbBaseUrl = 'https://imdb8.p.rapidapi.com/auto-complete?q=';
 
 // Function to handle the search for movies using both TMDB and IMDb APIs
