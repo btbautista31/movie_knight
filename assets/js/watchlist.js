@@ -159,4 +159,4 @@ function handleLocalStorageChange(event) {
 window.addEventListener('storage', handleLocalStorageChange);
 
 // Call the displayWatchlist function to show the user's watchlist movies on page load
-displayWatchlist();
+displayWatchlist(); 
