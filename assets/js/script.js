@@ -110,8 +110,9 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
     movieCard.style.backgroundColor = '#444';
     movieCard.style.display = 'flex';
     movieCard.style.flexDirection = 'column';
-    movieCard.style.justifyContent = 'space-around';
+    movieCard.style.justifyContent = 'space-between';
 
+    // Using day.js to format the release date
     var releaseDateString = releaseDate ? dayjs(releaseDate).format('MM-DD-YYYY') : 'N/A';
 
     // Declare the IMDb link variable with an empty string
@@ -122,12 +123,31 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
         imdbLink = `https://www.imdb.com/title/${imdbId}`;
     }
 
-    // Creating the movie card that will be displayed for each search result
-    movieCard.innerHTML = `<h2><strong>${title}</strong></h2>
-                            <p>Release Date: ${releaseDateString}</p>
-                            <img src="https://image.tmdb.org/t/p/w185/${imageUrl}" alt="${title} poster">
-                            <p><strong>Actors:</strong> ${imdbDescription}</p>
-                            <p class="movie-description">${tmdbDescription}</p>`;
+    // Create the <h2> element and set its style inline
+    var movieTitle = document.createElement('h2');
+    movieTitle.innerHTML = `<strong style="color: #FF6B01">${title}</strong>`;
+
+    // Create the rest of the movie card content
+    var movieReleaseDate = document.createElement('p');
+    movieReleaseDate.textContent = `Release Date: ${releaseDateString}`;
+    movieReleaseDate.style.fontSize = '12px';
+    movieReleaseDate.style.fontStyle = 'italic';
+
+    var movieImage = document.createElement('img');
+    movieImage.src = `https://image.tmdb.org/t/p/w185/${imageUrl}`;
+    movieImage.alt = `${title} poster`;
+    movieImage.style.width = '80%';
+    movieImage.style.height = 'auto';
+    movieImage.style.borderRadius = '8px';
+    movieImage.style.marginBottom = '15px';
+
+    var movieImdbDescription = document.createElement('p');
+    movieImdbDescription.innerHTML = `<strong style="color: #FF6B01">Actors:</strong> ${imdbDescription || 'N/A'}`;
+
+    var movieTmdbDescription = document.createElement('p');
+    movieTmdbDescription.classList.add('movie-description');
+    movieTmdbDescription.style.fontSize = '12px';
+    movieTmdbDescription.textContent = tmdbDescription || 'N/A';
 
     // Creating the IMDb logo image element
     var imdbLogoImg = document.createElement('img');
@@ -159,7 +179,6 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
     var imdbLinkContainer = document.createElement('p');
     imdbLinkContainer.classList.add('imdb-link');
     imdbLinkContainer.appendChild(imdbLinkElement);
-    movieCard.appendChild(imdbLinkContainer);
 
     // Creating the Font Awesome icon element
     var heartIcon = document.createElement('i');
@@ -178,10 +197,16 @@ function createMovieCard(title, releaseDate, imageUrl, tmdbDescription, imdbDesc
         document.addEventListener('DOMContentLoaded', function () {
             // Add cursor: pointer style to the heartIcon
             heartIcon.style.cursor = 'pointer';
-          });
+        });
     }
 
     // Add the Font Awesome icon to the movie card
+    movieCard.appendChild(movieTitle);
+    movieCard.appendChild(movieReleaseDate);
+    movieCard.appendChild(movieImage);
+    movieCard.appendChild(movieImdbDescription);
+    movieCard.appendChild(movieTmdbDescription);
+    movieCard.appendChild(imdbLinkContainer);
     movieCard.appendChild(heartIcon);
 
     // Function to toggle the icon style when clicked
@@ -279,25 +304,114 @@ function addToWatchlist(movie, heartIcon) {
         heartIcon.classList.add('fa-regular', 'fa-heart', 'fa-2xl');
         heartIcon.style.color = '#ffa200';
     }
+    // After successfully adding to watchlist, update the watchlist display
+    populateWatchlist();
 }
 
-// Navbar-Hamburger 
-$( document ).ready(function() {
+// Function to populate the watchlist on the page with movies from local storage
+function populateWatchlist() {
+    // Retrieve the watchlist from local storage or create an empty array if it doesn't exist
+    var watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+    var watchlistContainer = document.getElementById('watchlistContainer');
+    watchlistContainer.innerHTML = '';
 
-    $( ".cross" ).hide();
-    $( ".menu" ).hide();
-    $( ".hamburger" ).click(function() {
-    $( ".menu" ).slideToggle( "slow", function() {
-    $( ".hamburger" ).hide();
-    $( ".cross" ).show();
+    // Loop through each movie in the watchlist and create a list item for it
+    for (var movie of watchlist) {
+        var listItem = document.createElement('li');
+        listItem.classList.add('watchlist-item'); // Add a class for further styling, optional
+
+        // Create a span element for the movie title and set its text content
+        var movieTitle = document.createElement('span');
+        movieTitle.textContent = movie.title;
+        listItem.appendChild(movieTitle);
+
+        // Create the delete icon using Font Awesome
+        var deleteIcon = document.createElement('i');
+        deleteIcon.classList.add('fa-solid', 'fa-x');
+        deleteIcon.style.color = '#ff6b01';
+        deleteIcon.addEventListener('click', createRemoveFromWatchlistHandler(movie));
+
+        // Add a hover effect to the deleteIcon using CSS styles
+        deleteIcon.addEventListener('mouseover', function () {
+            this.style.transition = 'transform 0.2s ease';
+            this.style.transform = 'scale(1.1)';
+        });
+
+        deleteIcon.addEventListener('mouseout', function () {
+            this.style.transition = 'transform 0.2s ease';
+            this.style.transform = 'scale(1.0)';
+        });
+
+        // Append the delete icon to the list item
+        listItem.appendChild(deleteIcon);
+
+        // Append the list item to the watchlist container
+        watchlistContainer.appendChild(listItem);
+    }
+}
+
+// Function to create a closure for the remove from watchlist event handler
+function createRemoveFromWatchlistHandler(movie) {
+    // Return a function that removes the movie from the watchlist and updates the display
+    return function () {
+        removeFromWatchlist(movie);
+        populateWatchlist();
+    };
+}
+
+// Function to remove a movie from the watchlist in local storage
+function removeFromWatchlist(movie) {
+    var watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+    var movieIndex = watchlist.findIndex(m => m.title === movie.title);
+
+    if (movieIndex !== -1) {
+        // Remove the movie from the watchlist array
+        watchlist.splice(movieIndex, 1);
+        // Save the updated watchlist back to local storage
+        localStorage.setItem('watchlist', JSON.stringify(watchlist));
+    }
+}
+
+
+// Call it on page load to show the saved watchlist
+document.addEventListener('DOMContentLoaded', function () {
+    populateWatchlist();
+});
+
+// Function that allows the user to delete movies from their watchlist
+function removeFromWatchlist(movie) {
+    var watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+    var movieIndex = watchlist.findIndex(m => m.title === movie.title);
+
+    if (movieIndex !== -1) {
+        watchlist.splice(movieIndex, 1);
+        localStorage.setItem('watchlist', JSON.stringify(watchlist));
+        populateWatchlist();
+    }
+}
+
+// Call it on page load to show the saved watchlist
+document.addEventListener('DOMContentLoaded', function () {
+    populateWatchlist();
+});
+
+// Navbar-Hamburger 
+$(document).ready(function () {
+
+    $(".cross").hide();
+    $(".menu").hide();
+    $(".hamburger").click(function () {
+        $(".menu").slideToggle("slow", function () {
+            $(".hamburger").hide();
+            $(".cross").show();
+        });
     });
+
+    $(".cross").click(function () {
+        $(".menu").slideToggle("slow", function () {
+            $(".cross").hide();
+            $(".hamburger").show();
+        });
     });
-    
-    $( ".cross" ).click(function() {
-    $( ".menu" ).slideToggle( "slow", function() {
-    $( ".cross" ).hide();
-    $( ".hamburger" ).show();
-    });
-    });
-    
-    });
+
+});
