@@ -58,8 +58,9 @@ N/A
 ##Webpage Screenshot
 
 
-![Screenshot (77).png]
+![Screenshot (77)](https://github.com/btbautista31/movie_knight/assets/135686193/a2f2fb3b-d9d9-42bb-8d93-60356a4844f6)
 ![Uploading Screenshot (73).png…]()
+
 
 
 ##Link to Deployed Application
