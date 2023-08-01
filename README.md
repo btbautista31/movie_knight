@@ -40,13 +40,13 @@ No special installation is necessary to view this project.
 This project is intended for education purposes only.
 
 ## Features
-HTML / CSS / JavaScript / Bulma (CSS Framework)
-JavaScript Libraries: jQuery / Day.js / Sweet Alert2
-Local Storage / Fetch API
-Font Awesome / Google Fonts
+- HTML / CSS / JavaScript / Bulma
+- JavaScript Libraries: jQuery / Day.js / Sweet Alert2
+- Local Storage / Fetch API
+- Font Awesome / Google Fonts
 Server-Side APIs:
-The Movie Database: https://developer.themoviedb.org/reference/intro/getting-started
-IMDb API: https://rapidapi.com/apidojo/api/imdb8 (via RapidApi)
+- The Movie Database: https://developer.themoviedb.org/reference/intro/getting-started
+- IMDb API: https://rapidapi.com/apidojo/api/imdb8 (via RapidApi)
 
 ## Authors
 Bonne Bautista / Patrick McClelland / Walter Craigie / Will Grey
