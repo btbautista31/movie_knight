@@ -56,15 +56,10 @@ N/A
 ##Authors
 
 ##Webpage Screenshot
-
-
-
-![Uploading Screenshot (73).png…]()
-
+![Screenshot (77)](https://github.com/btbautista31/movie_knight/assets/135686193/1ebf8a7e-186a-4c98-bf75-9d4619a0e26a)
 
 
 ##Link to Deployed Application
-
 https://btbautista31.github.io/movie_knight/search.html
 
 
