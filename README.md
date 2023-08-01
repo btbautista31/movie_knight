@@ -1,5 +1,5 @@
 # UC Berkeley Coding Bootcamp - Group Project 1
-## Movie Knight - Movie Title Search Enginge
+## Movie Knight - Movie Title Search Engine
 The Movie Knight project is an innovative web application that allows users to search for and explore detailed information about movies effortlessly. Leveraging the power of The Movie Database (TMDB) and IMDb APIs, users can enter the movie's title and access relevant details, including release date, movie poster, actors, and plot description. The application showcases movie data elegantly through visually appealing movie cards, and with help of the CSS framework Bulma, provides an interactive user experience. Moreover, Movie Knight enables users to create and manage their personalized watchlist, with seamless integration of local storage for persistent data retention. The project exemplifies a professional and polished implementation, utilizing HTML, CSS, JavaScript, and various libraries, ensuring responsiveness and a captivating UI design.
 
 ## Table of Contents 
