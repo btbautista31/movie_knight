@@ -66,4 +66,4 @@ https://btbautista31.github.io/movie_knight/
 
 ## Webpage Screenshots
 ![Movie Knight Homepage - Webpage Screenshots](./assets/images/homepage-screenshot.png)
-![Movie Knight Search Page - Webpage Screenshots](./assets/images/search-screenshot.png)
+![Movie Knight Search Page - Webpage Screenshots](./assets/images/search-page-screenshot.png)
