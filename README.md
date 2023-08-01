@@ -1,68 +1,69 @@
-# movie_knight-Movie Search Engine Application
+# UC Berkeley Coding Bootcamp - Group Project 1
+## Movie Knight - Movie Title Search Enginge
+The Movie Knight project is an innovative web application that allows users to search for and explore detailed information about movies effortlessly. Leveraging the power of The Movie Database (TMDB) and IMDb APIs, users can enter the movie's title and access relevant details, including release date, movie poster, actors, and plot description. The application showcases movie data elegantly through visually appealing movie cards, and with help of the CSS framework Bulma, provides an interactive user experience. Moreover, Movie Knight enables users to create and manage their personalized watchlist, with seamless integration of local storage for persistent data retention. The project exemplifies a professional and polished implementation, utilizing HTML, CSS, JavaScript, and various libraries, ensuring responsiveness and a captivating UI design.
 
-##Table of Contents
-[User Story]
+## Table of Contents 
+- [User Story](#user-story)
+- [Acceptance Criteria](#acceptance-criteria)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Features](#features)
+- [Contributing](#contributing)
+- [Support](#support)
+- [Acknowledgements](#acknowledgements)
+- [Authors](#authors)
+- [Deployed Application](#link-to-deployed-application)
+- [Webpage Screenshots](#webpage-screenshots)
 
-AS a user ​
+## User Story
+AS a user
+I WANT I want to be able to search for movies by title and add them to my watchlist
+SO THAT  I can keep track of all of my favorite movies.
 
-I Want I want to be able to search for movies by title and add them to my watchlist​
-
-SO That  I can keep track of all of my favorite movies.​
-
-##Acceptance Criteria
-GIVEN that I am a user on Movie Knight,​
-
-WHEN I enter the website,​
-
-THEN I should be brought to a landing page.​
-
-WHEN I am brought to the search page,​
-
-THEN I see an input field and search button.​
-
+## Acceptance Criteria
+GIVEN that I am a user on Movie Knight,
+WHEN I enter the website,
+THEN I should be brought to a landing page.
+WHEN I navigate to the search page,
+THEN I see a header containing our logo and hamburger-style menu, as well as an input field and search button.
 WHEN I enter the name of a movie and click search,
-
-THEN I should see movie cards displayed matching that title, in addition to thier release date, movie poster, actors, and a brief movie discription.
-
+THEN I should see movie cards displayed matching that title, in addition to their release date, movie poster, actors, and description. 
 WHEN I click the heart icon inside a movie card,
-
 THEN I can save a movie to my watchlist.
+WHEN movies are saved to my watchlist,
+THEN the heart icon should turn pink, and the title should populate in the watchlist, located in the sidebar of the webpage.
 
-WHEN movies are saved to my watchlist, 
-
-THEN thier heart icon should turn pink and populate in the watchlist that is located in the sidebar of the webpage.
-
-THEN I can enter the name of a movie in the input field and click​
-As a group we will used everything you’ve learned over the past six modules to create a real-world front-end application that you’ll be able to showcase to potential employers. WE used
-
-##Installation
+## Installation
 No special installation is necessary to view this project.
 
-##Usage
+## Usage 
 This project is intended for education purposes only.
 
-##Features
-HTML/CSS framework/Javascript/
+## Features
+HTML / CSS / JavaScript / Bulma (CSS Framework)
+JavaScript Libraries: jQuery / Day.js / Sweet Alert2
+Local Storage / Fetch API
+Font Awesome / Google Fonts
+Server-Side APIs:
+The Movie Database: https://developer.themoviedb.org/reference/intro/getting-started
+IMDb API: https://rapidapi.com/apidojo/api/imdb8 (via RapidApi)
 
-##Contributing
-Patrick McClelland, Bonne Autista, Walter Craigie, Will Gray
+## Authors
+Bonne Bautista / Patrick McClelland / Walter Craigie / Will Grey
 
-##Support
+## Contributing
+No other contributors have added to this project.
+
+## Support
 N/A
 
-##Acknowledgements
+## Acknowledgements
 N/A
 
-##Authors
+## Link to Deployed Application
+To access the deployed application, please click the link below:
+https://btbautista31.github.io/movie_knight/
 
-##Webpage Screenshot
-![Screenshot (77)](https://github.com/btbautista31/movie_knight/assets/135686193/1ebf8a7e-186a-4c98-bf75-9d4619a0e26a)
-
-
-##Link to Deployed Application
-https://btbautista31.github.io/movie_knight/search.html
-
-
-
-
-
+## Webpage Screenshots
+![Movie Knight Homepage - Webpage Screenshots](./assets/images/homepage-screenshot.png)
+![Movie Knight Search Page - Webpage Screenshots](./assets/images/search-screenshot.png)
